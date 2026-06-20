@@ -5,7 +5,7 @@ GITHUB_URL = "https://github.com/GhostDriftTheory/responsibility-os-internal-con
 
 
 st.set_page_config(
-    page_title="ADIC Internal Control Demo",
+    page_title="ADIC 内部統制デモ",
     page_icon="R",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -59,8 +59,8 @@ st.markdown(
     }
     .hero-title {
         color: var(--ink);
-        font-size: 2.25rem;
-        line-height: 1.05;
+        font-size: 2.2rem;
+        line-height: 1.12;
         font-weight: 850;
         margin-bottom: 0.45rem;
     }
@@ -298,57 +298,57 @@ def status_card(label: str, value: str) -> None:
 def decide_gate(checks: dict[str, bool]) -> tuple[str, str, str]:
     missing = [label for label, checked in checks.items() if not checked]
     critical = {
-        "Decision maker is named",
-        "Receiving party is named",
-        "Stop condition is defined",
-        "Stop condition was checked at the handoff",
-        "Accept or refuse result is recorded",
+        "判断した人がわかる",
+        "受け入れた側がわかる",
+        "止める条件が決まっている",
+        "受け渡し時に止める条件を見た",
+        "受け入れたか断ったかが残っている",
     }
 
     if not missing:
         return (
             "PASS",
             "green",
-            "The company can treat this as its accountable business action.",
+            "会社の判断として通してよい状態です。",
         )
     if any(item in critical for item in missing):
         return (
             "STOP",
             "red",
-            "Do not treat this as a company decision yet.",
+            "まだ会社の判断として扱ってはいけません。",
         )
     return (
         "NEEDS EVIDENCE",
         "yellow",
-        "Hold the decision until the missing evidence is added.",
+        "足りない証拠を足してから判断してください。",
     )
 
 
 def executive_summary(verdict: str) -> str:
     if verdict == "PASS":
         return (
-            "This AI-recommended handoff can be treated as a company action because "
-            "the responsible people, checked evidence, stop condition, and handoff "
-            "result are preserved."
+            "このAIの提案による受け渡しは、会社の判断として扱えます。"
+            "誰が関わり、何を見て、どの条件なら止めるべきだったか、"
+            "そして受け入れ結果が残っているためです。"
         )
     if verdict == "STOP":
         return (
-            "This AI-recommended handoff was operationally possible, but the company "
-            "should not own it as a business decision yet because the handoff condition "
-            "was not established."
+            "このAIの提案による受け渡しは、作業としては可能でした。"
+            "しかし、受け渡しの条件がはっきり残っていないため、"
+            "まだ会社の判断として扱うべきではありません。"
         )
     return (
-        "This AI-recommended handoff needs more evidence before the company can own it "
-        "as a business decision."
+        "このAIの提案による受け渡しは、会社の判断として扱う前に、"
+        "足りない証拠を追加する必要があります。"
     )
 
 
 def management_values(verdict: str) -> tuple[str, str]:
     if verdict == "PASS":
-        return "Established", "Treat as a responsible business decision."
+        return "成立", "会社の判断として扱う。"
     if verdict == "STOP":
-        return "Not established", "Do not treat this as a responsible business decision yet."
-    return "Needs evidence", "Hold until missing evidence is added."
+        return "未成立", "まだ会社の判断として扱わない。"
+    return "証拠不足", "足りない証拠を足すまで保留する。"
 
 
 def management_card(verdict: str) -> None:
@@ -357,19 +357,19 @@ def management_card(verdict: str) -> None:
         f"""
         <div class="decision-card">
             <div class="decision-row">
-                <div class="decision-label">Operational status</div>
-                <div class="decision-value">Completed</div>
+                <div class="decision-label">作業の状態</div>
+                <div class="decision-value">完了</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">Governance status</div>
-                <div class="decision-value">Approved</div>
+                <div class="decision-label">承認の状態</div>
+                <div class="decision-value">承認済み</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">Accountability status</div>
+                <div class="decision-label">会社が引き受けられるか</div>
                 <div class="decision-value">{accountability_status}</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">Management action</div>
+                <div class="decision-label">経営としての対応</div>
                 <div class="decision-value">{action}</div>
             </div>
         </div>
@@ -380,139 +380,139 @@ def management_card(verdict: str) -> None:
 
 with st.sidebar:
     st.markdown("### Responsibility OS")
-    st.markdown("A simple demo for one question:")
-    st.markdown("**Can the company own this AI-assisted decision?**")
+    st.markdown("このデモで見る問いは1つです。")
+    st.markdown("**会社として、この判断を引き受けてよいか？**")
     st.markdown(f"[GitHub repository]({GITHUB_URL})")
     st.divider()
-    st.markdown("**What this is**")
-    st.markdown("An upstream gate before risk management begins.")
-    st.markdown("**What this is not**")
-    st.markdown("- Not a Lean UI\n- Not a math demo\n- Not a risk scoring app")
+    st.markdown("**これは何か**")
+    st.markdown("リスク管理の前に置く、会社の判断として通せるかを見る入口です。")
+    st.markdown("**これは何ではないか**")
+    st.markdown("- Leanの画面ではありません\n- 数学の説明ではありません\n- リスク点数を出すアプリではありません")
 
 
 st.markdown(
     """
     <div class="hero">
         <div class="eyebrow">Responsibility OS / ADIC</div>
-        <div class="hero-title">Can the company own this decision?</div>
+        <div class="hero-title">会社として、この判断を引き受けてよいか？</div>
         <div class="hero-subtitle">
-            This demo shows why a green governance dashboard can still leave a company
-            unable to accept an AI-assisted decision as its own business action.
+            このデモは、画面が全部「緑」でも、会社がAIの提案を
+            自分たちの判断として受け止められないことがある、という話です。
         </div>
         <div class="spine">
-            Before managing the risk of a decision, a company must know whether it can own the decision.
+            判断のリスクを見る前に、会社がその判断を引き受けられるかを見る。
         </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-st.header("The Priority Shift")
+st.header("見る順番を変える")
 st.markdown(
-    '<div class="section-note">The problem is not risk management. The problem is asking the risk question too early.</div>',
+    '<div class="section-note">問題はリスク管理そのものではありません。リスクを最初に聞いてしまう順番です。</div>',
     unsafe_allow_html=True,
 )
 left, right = st.columns(2)
 with left:
     path_box(
-        "Current governance priority",
+        "よくある順番",
         [
-            "What risk class is this AI or system?",
-            "Was it approved?",
-            "Are logs available?",
-            "Did the operation complete?",
+            "このAIやシステムのリスクは何か",
+            "承認されたか",
+            "ログはあるか",
+            "作業は終わったか",
         ],
-        "Result: The dashboard looks green, but the company may still be unable to own the decision.",
+        "結果: 画面は緑。でも、会社がその判断を引き受けられるとは限らない。",
         "path-risk",
         "yellow-box",
     )
 with right:
     path_box(
-        "Responsibility OS priority",
+        "ADICの順番",
         [
-            "Can the company own this decision?",
-            "Who accepted responsibility?",
-            "What evidence was attached to the decision?",
-            "What condition would have stopped it?",
-            "Only then: classify and manage the remaining risk.",
+            "会社としてこの判断を引き受けてよいか",
+            "誰が受け入れたか",
+            "何を見て判断したか",
+            "どんな時なら止めるべきだったか",
+            "その後で、残るリスクを分類して管理する",
         ],
-        "Result: Risk management starts after the decision becomes accountable.",
+        "結果: 会社が引き受けられる状態になってから、リスク管理が始まる。",
         "path-responsibility",
         "green-box",
     )
 
 html_block(
     """
-    <strong>Key point:</strong> Risk classification is useful. It is just the wrong
-    first question if the company does not yet know whether the decision can become
-    its accountable action.
+    <strong>大事な点:</strong> リスク分類は役に立ちます。
+    ただし、会社がその判断を引き受けられるかが分からないうちに、
+    最初の問いにしてしまうと順番が違います。
     """,
     "blue-box",
 )
 
 top_cols = st.columns(4)
 with top_cols[0]:
-    mini_card("First question", "Can we own this decision as a company?")
+    mini_card("最初の問い", "会社として、この判断を引き受けてよいか。")
 with top_cols[1]:
-    mini_card("Green is not enough", "Done, approved, and logged does not always mean accountable.")
+    mini_card("緑でも足りない", "完了、承認、ログあり。でも引き受けられるとは限りません。")
 with top_cols[2]:
-    mini_card("ADIC is upstream", "It decides whether risk management can meaningfully begin.")
+    mini_card("ADICは前段", "リスク管理を始めてよいかを見る入口です。")
 with top_cols[3]:
-    mini_card("Simple output", "Pass, stop, or add evidence before the company owns the action.")
+    mini_card("出力はシンプル", "通す、止める、証拠を足す。この3つです。")
 
-st.header("Scenario")
+st.header("シナリオ")
 html_block(
     """
-    <strong>Cold-chain logistics handoff.</strong><br>
-    An AI optimization system recommends transferring refrigerated goods at
-    Warehouse A because it improves delivery time, cost, and inventory efficiency.
+    <strong>冷蔵品の受け渡し。</strong><br>
+    AIが、配送時間・コスト・在庫効率をよくするために、
+    冷蔵品を倉庫Aで受け渡すことを提案しました。
     """
 )
 
-st.header("Current Governance View")
+st.header("今の管理画面ではこう見える")
 st.markdown(
-    '<div class="section-note">Everything below looks green in a normal governance dashboard.</div>',
+    '<div class="section-note">ふつうの管理画面では、下の項目はすべて緑に見えます。</div>',
     unsafe_allow_html=True,
 )
 card_cols = st.columns(5)
 with card_cols[0]:
-    status_card("Risk class", "Medium")
+    status_card("リスク分類", "中")
 with card_cols[1]:
-    status_card("Approval", "Approved")
+    status_card("承認", "済み")
 with card_cols[2]:
-    status_card("Temperature log", "Available")
+    status_card("温度ログ", "あり")
 with card_cols[3]:
-    status_card("Delivery", "Completed")
+    status_card("配送", "完了")
 with card_cols[4]:
-    status_card("Audit log", "Available")
+    status_card("監査ログ", "あり")
 
 html_block(
     """
-    <strong>What this proves:</strong> the process happened.<br>
-    <strong>What it does not prove:</strong> the company can accept the decision as
-    its own business action.
+    <strong>これで分かること:</strong> 作業が行われたこと。<br>
+    <strong>まだ分からないこと:</strong> 会社がその判断を自分たちの判断として
+    引き受けてよいか。
     """,
     "yellow-box",
 )
 
 html_block(
     """
-    <strong>Can the company answer these questions?</strong>
+    <strong>会社はこの質問に答えられますか？</strong>
     <ul>
-        <li>Who accepted responsibility at the handoff?</li>
-        <li>What exactly was checked before accepting the goods?</li>
-        <li>What condition should have stopped the handoff?</li>
-        <li>Can shipping, QA, legal, and management read the same explanation later?</li>
+        <li>誰が受け渡しの責任を引き受けたか。</li>
+        <li>受け入れる前に、何を確認したか。</li>
+        <li>どんな状態なら止めるべきだったか。</li>
+        <li>出荷、品質、法務、経営があとで同じ説明を読めるか。</li>
     </ul>
-    <strong>Current result:</strong> The work is completed, but the company cannot
-    yet own the decision.
+    <strong>今の結果:</strong> 作業は終わっています。でも、会社の判断としては
+    まだ引き受けられません。
     """,
     "red-box",
 )
 
-st.header("Collapse Demo")
+st.header("同じ結果に見えてしまう例")
 st.markdown(
-    '<div class="section-note">Two different responsibility stories can look like the same business result.</div>',
+    '<div class="section-note">責任の流れが違っても、画面上は同じ結果に見えることがあります。</div>',
     unsafe_allow_html=True,
 )
 left, right = st.columns(2)
@@ -520,13 +520,13 @@ with left:
     st.markdown(
         """
         <div class="case-box case-good">
-            <div class="case-title">Case A: Accountable handoff</div>
+            <div class="case-title">ケースA: 引き受けられる受け渡し</div>
             <ul>
-                <li>Carrier presents temperature evidence</li>
-                <li>Warehouse checks it</li>
-                <li>Stop condition is checked</li>
-                <li>Warehouse accepts the handoff</li>
-                <li>Responsibility moves without a gap</li>
+                <li>運送会社が温度の証拠を出す</li>
+                <li>倉庫がそれを確認する</li>
+                <li>止める条件を確認する</li>
+                <li>倉庫が受け入れる</li>
+                <li>責任が空白なく移る</li>
             </ul>
         </div>
         """,
@@ -536,13 +536,13 @@ with right:
     st.markdown(
         """
         <div class="case-box case-bad">
-            <div class="case-title">Case B: Non-accountable handoff</div>
+            <div class="case-title">ケースB: 引き受けられない受け渡し</div>
             <ul>
-                <li>AI recommends transfer</li>
-                <li>Temperature data exists somewhere</li>
-                <li>Warehouse receives the goods</li>
-                <li>No clear acceptance condition is recorded</li>
-                <li>Stop condition was not checked at the handoff</li>
+                <li>AIが受け渡しを提案する</li>
+                <li>温度データはどこかにある</li>
+                <li>倉庫が品物を受け取る</li>
+                <li>受け入れ条件がはっきり残っていない</li>
+                <li>その場で止める条件を確認していない</li>
             </ul>
         </div>
         """,
@@ -550,38 +550,38 @@ with right:
     )
 
 st.markdown(
-    '<div class="collapse-result">Both appear as: Delivery completed</div>',
+    '<div class="collapse-result">どちらも画面上は「配送完了」に見える</div>',
     unsafe_allow_html=True,
 )
 html_block(
-    "<strong>Same visible result. Different accountability status. This is the internal control failure.</strong>",
+    "<strong>見える結果は同じ。でも、会社が引き受けられるかは違います。ここが内部統制の失敗点です。</strong>",
     "red-box",
 )
 
-st.header("Can This Become A Company Action?")
+st.header("会社の判断として通してよいか")
 st.markdown(
-    '<div class="section-note">This is not a checklist for extra paperwork. It is a pass-or-stop gate before the company owns the decision.</div>',
+    '<div class="section-note">これは書類を増やすチェックリストではありません。会社がその判断を引き受ける前の、通すか止めるかの判定です。</div>',
     unsafe_allow_html=True,
 )
 
 items = [
-    "Decision maker is named",
-    "Receiving party is named",
-    "Evidence checked at the handoff is recorded",
-    "Stop condition is defined",
-    "Stop condition was checked at the handoff",
-    "Accept or refuse result is recorded",
-    "Same explanation can be read later by shipping, QA, legal, and management",
+    "判断した人がわかる",
+    "受け入れた側がわかる",
+    "受け渡し時に見た証拠が残っている",
+    "止める条件が決まっている",
+    "受け渡し時に止める条件を見た",
+    "受け入れたか断ったかが残っている",
+    "出荷、品質、法務、経営があとで同じ説明を読める",
 ]
 
 defaults = {
-    "Decision maker is named": True,
-    "Receiving party is named": True,
-    "Evidence checked at the handoff is recorded": False,
-    "Stop condition is defined": False,
-    "Stop condition was checked at the handoff": False,
-    "Accept or refuse result is recorded": False,
-    "Same explanation can be read later by shipping, QA, legal, and management": False,
+    "判断した人がわかる": True,
+    "受け入れた側がわかる": True,
+    "受け渡し時に見た証拠が残っている": False,
+    "止める条件が決まっている": False,
+    "受け渡し時に止める条件を見た": False,
+    "受け入れたか断ったかが残っている": False,
+    "出荷、品質、法務、経営があとで同じ説明を読める": False,
 }
 
 check_cols = st.columns(2)
@@ -591,49 +591,48 @@ for index, item in enumerate(items):
         checks[item] = st.checkbox(item, value=defaults[item])
 
 score = sum(1 for checked in checks.values() if checked)
-st.progress(score / len(items), text=f"{score} of {len(items)} ownership conditions preserved")
+st.progress(score / len(items), text=f"{score} / {len(items)} 個の条件がそろっています")
 
 verdict, color, message = decide_gate(checks)
 html_block(f"<strong>{verdict}:</strong> {message}", f"{color}-box verdict")
 
 missing_items = [item for item, checked in checks.items() if not checked]
 if missing_items:
-    st.markdown("**Missing proof before the company can own the decision**")
+    st.markdown("**会社が引き受ける前に足りないもの**")
     st.markdown(
         " ".join(f'<span class="pill">{item}</span>' for item in missing_items),
         unsafe_allow_html=True,
     )
 
-st.header("Management Decision Output")
+st.header("経営向けの出力")
 management_card(verdict)
 
-st.header("Executive Summary")
+st.header("短い説明")
 html_block(executive_summary(verdict), f"{color}-box")
 
-st.header("ADIC Is Not Risk Management")
+st.header("ADICはリスク管理ではない")
 left, right = st.columns(2)
 with left:
     html_block(
         """
-        <strong>Risk management asks:</strong><br>
-        What could go wrong after we act?
+        <strong>リスク管理が聞くこと:</strong><br>
+        実行したあと、何が悪くなり得るか。
         """,
         "yellow-box",
     )
 with right:
     html_block(
         """
-        <strong>ADIC asks:</strong><br>
-        Can this decision become our accountable business action in the first place?
+        <strong>ADICが聞くこと:</strong><br>
+        そもそも、この判断を会社の判断として引き受けてよいか。
         """,
         "blue-box",
     )
 
 html_block(
     """
-    ADIC is not an extra control after risk classification. It is the upstream
-    internal control gate that decides whether risk classification and risk
-    management can meaningfully begin.
+    ADICは、リスク分類のあとに足す管理ではありません。
+    リスク分類やリスク管理を始めてよいかを先に見る、内部統制の入口です。
     """
 )
 
