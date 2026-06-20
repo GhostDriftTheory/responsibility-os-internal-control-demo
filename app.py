@@ -81,7 +81,8 @@ st.markdown(
         margin-bottom: 0.8rem;
     }
     .box, .path-box, .status-card, .inspection-panel, .node, .decision-card,
-    .judgement-plate, .mechanism-card, .flow-card, .contrast-card, .conclusion-card {
+    .judgement-plate, .mechanism-card, .flow-card, .contrast-card, .conclusion-card,
+    .bridge-card {
         border-radius: 8px;
     }
     .box {
@@ -314,6 +315,21 @@ st.markdown(
     .mechanism-card strong {
         color: var(--ink);
     }
+    .bridge-card {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 1rem 1.1rem;
+        min-height: 170px;
+    }
+    .bridge-title {
+        color: var(--ink);
+        font-weight: 850;
+        margin-bottom: 0.45rem;
+    }
+    .bridge-copy {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
     .flow-card {
         border: 1px solid var(--line);
         background: #ffffff;
@@ -419,11 +435,11 @@ def judgement_plate() -> None:
             <div class="judgement-grid">
                 <div>
                     <div class="judgement-label">今日見ること</div>
-                    <div class="judgement-value">配送会社 → 中継倉庫で、責任が空白になっていないか</div>
+                    <div class="judgement-value">この仕組みを会社の正式運用に入れてよいか</div>
                 </div>
                 <div>
                     <div class="judgement-label">判定</div>
-                    <div class="judgement-value">空白あり。正式運用不可。</div>
+                    <div class="judgement-value">止める責任が消えるため、不可。</div>
                 </div>
             </div>
         </div>
@@ -505,7 +521,7 @@ def management_card() -> None:
             </div>
             <div class="decision-row">
                 <div class="decision-label">経営としての対応</div>
-                <div class="decision-value">本番運用に入れず、中継倉庫の責任条件を直す。</div>
+                <div class="decision-value">本番運用に入れず、異常時に誰が止めるかを設計し直す。</div>
             </div>
         </div>
         """,
@@ -520,6 +536,18 @@ def flow_card(number: int, title: str, copy: str) -> None:
             <div class="flow-number">STEP {number}</div>
             <div class="flow-title">{title}</div>
             <div class="flow-copy">{copy}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def bridge_card(title: str, copy: str) -> None:
+    st.markdown(
+        f"""
+        <div class="bridge-card">
+            <div class="bridge-title">{title}</div>
+            <div class="bridge-copy">{copy}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -545,11 +573,11 @@ st.markdown(
         <div class="eyebrow">Responsibility OS / ADIC</div>
         <div class="hero-title">その仕組み、本番運用に入れてよいですか？</div>
         <div class="hero-subtitle">
-            リスク分類・承認・ログ設計がそろっていても、
-            会社の正式な業務として運用してよいとは限りません。
+            新しい業務フロー、AIシステム、自動化ツール、外部委託の仕組み。
+            経営が最後に判断する問いは同じです。
         </div>
         <div class="spine">
-            ADIC / 責任OSは、業務フローを順にたどり、責任のつながりが切れる場所を検査します。
+            承認やログがそろっていても、異常時に誰が止めるのかが消える仕組みは、本番運用に入れられません。
         </div>
     </div>
     """,
@@ -557,7 +585,7 @@ st.markdown(
 )
 
 demo_tab, mechanism_tab = st.tabs(
-    ["デモ：責任が空白になる瞬間", "メカニズム：なぜ内部統制になるのか"]
+    ["デモ：本番運用に入れてよいか", "しくみ：なぜ本番前に止められるのか"]
 )
 
 with demo_tab:
@@ -574,7 +602,7 @@ with demo_tab:
                 "ログは取れるか",
                 "運用開始できるか",
             ],
-            "本番運用できそうに見える。でも、責任のつながりはまだ見えていない。",
+            "本番運用できそうに見える。でも、異常時に誰が止めるかはまだ見えていない。",
             "path-risk",
             "yellow-box",
         )
@@ -585,8 +613,8 @@ with demo_tab:
                 "業務フローを順にたどる",
                 "誰が何を渡すかを見る",
                 "何を確認して渡すかを見る",
-                "どこで止められるかを見る",
-                "責任が切れた場所で止める",
+                "異常時に誰が止めるかを見る",
+                "止める責任が消えた場所で止める",
             ],
             "正式運用に耐える仕組みかを先に見る。",
             "path-responsibility",
@@ -596,11 +624,20 @@ with demo_tab:
     st.header("シナリオ")
     html_block(
         """
-        <strong>冷蔵品の受け渡し業務。</strong><br>
+        <strong>物流は例です。主役は、会社が新しい仕組みを本番運用に入れてよいかです。</strong><br>
         会社は、冷蔵品の受け渡しに新しい自動化フローを入れようとしています。
-        この仕組みでは、配送時間・コスト・在庫効率をよくするため、
-        倉庫Aでの受け渡しを標準フローに組み込みます。
+        これは、AIシステムや外部委託の仕組みを正式運用に入れる前に、
+        経営がどこを見るべきかを示すための例です。
         """
+    )
+
+    html_block(
+        """
+        <strong>荷物は動いている。でも、“誰が止める責任を持っているか”だけが宙に浮くことがあります。</strong><br>
+        温度が基準を超えたとき、誰が受け取りを拒否し、誰が配送を止め、誰が荷主に報告するのか。
+        ここが決まっていないと、配送完了ログがあっても、本番運用には入れられません。
+        """,
+        "blue-box",
     )
 
     st.header("従来の管理画面は全部グリーン")
@@ -637,7 +674,7 @@ with demo_tab:
         <div class="stop-card">
             <div class="stop-title">STOP</div>
             <div class="stop-copy">
-                責任のつながりが中継倉庫で切れているため、この仕組みは本番運用に入れてはいけません。
+                中継倉庫で「誰が止めるのか」が宙に浮くため、この仕組みは本番運用に入れてはいけません。
             </div>
         </div>
         """,
@@ -649,7 +686,7 @@ with demo_tab:
         <strong>ADIC / 責任OSが見ていること:</strong><br>
         ログがあるかではありません。受け渡しごとに、
         誰が何を受け取り、何を確認し、どこで止められるかを順にたどります。
-        つながりが切れる場所があれば、管理画面が全部緑でも本番運用には入れません。
+        異常時に誰が止めるのかが消える場所があれば、管理画面が全部緑でも本番運用には入れません。
         """,
         "blue-box",
     )
@@ -658,18 +695,59 @@ with demo_tab:
     management_card()
 
 with mechanism_tab:
-    st.header("責任分界は“点”ではなく“つながり”で検査する")
+    st.header("経営が本当に知りたいのは、チェック済みかではない")
     st.markdown(
         """
         <div class="mechanism-card">
-            通常の管理では、承認、ログ、配送完了などが個別にOKであれば安心に見えます。
-            しかし内部統制で本当に重要なのは、それぞれの記録が
-            <strong>責任の移転条件</strong>としてつながっているかです。
-            配送会社の責任が終わった瞬間に、倉庫の責任が始まっていなければ、
-            その間に責任の空白が生まれます。
+            新しい業務フロー、AIシステム、自動化ツール、外部委託の仕組み。
+            経営が最後に判断しなければならない問いは同じです。
+            それは「この仕組みを会社の正式運用に入れてよいか」です。
+            承認、ログ、チェックリストがそろっていても、
+            異常時に誰が止めるのかが決まっていなければ、会社として安全に運用できるとは言えません。
         </div>
         """,
         unsafe_allow_html=True,
+    )
+
+    html_block(
+        """
+        以下では、冷蔵品の受け渡しを例にします。
+        ただし見ているのは物流の細部ではありません。
+        会社が新しい仕組みを正式運用に入れる前に、どこを検査すべきかです。
+        """,
+        "blue-box",
+    )
+
+    st.header("受け渡しで見るのは、荷物だけではない")
+    bridge_cols = st.columns(3)
+    with bridge_cols[0]:
+        bridge_card(
+            "荷物は渡った",
+            "配送会社から倉庫へ、冷蔵品は届いた。配送完了ログも残っている。",
+        )
+    with bridge_cols[1]:
+        bridge_card(
+            "でも、止める責任は渡ったか",
+            "温度が基準を超えていたとき、倉庫は受け取りを拒否できるのか。配送会社は止めるのか。荷主へ誰が報告するのか。",
+        )
+    with bridge_cols[2]:
+        bridge_card(
+            "ここが曖昧なら、本番運用は止める",
+            "荷物の移動と、責任の移動がずれている場合、あとから揉める。ADIC / 責任OSは、このずれを見つけて正式運用を止める。",
+        )
+
+    html_block(
+        """
+        <strong>専門的に言うと:</strong><br>
+        これは、仕事を次の人・会社へ渡す境目を、単なる「点」ではなく
+        「状態の移り変わり」として見る考え方です。
+        配送会社の責任が終わる条件と、倉庫の責任が始まる条件が、
+        同じ受け渡しの中でつながっているかを見る。
+        つながっていなければ、そこに責任の空白があると判断します。
+        形式検証の考え方で言えば、決めたルールどおりに仕事と責任がつながっているかを、
+        順番に確かめるということです。
+        """,
+        "blue-box",
     )
 
     flow_cols = st.columns(4)
@@ -681,16 +759,6 @@ with mechanism_tab:
         flow_card(3, "止める", "条件を満たさないとき、誰が止めるか。")
     with flow_cols[3]:
         flow_card(4, "残す", "後から同じ判断を確認できる形で記録する。")
-
-    html_block(
-        """
-        <strong>なぜ形式検証の考え方と相性がよいのか。</strong><br>
-        責任分界を、単なるチェック項目ではなく「前の責任が終わり、次の責任が始まる流れ」
-        として扱えるからです。Aの責任が終わる条件、Bの責任が始まる条件、
-        止める条件、後から確認できる記録。この4つが地続きかを検査できます。
-        """,
-        "blue-box",
-    )
 
     st.header("だから、次世代内部統制になる")
     st.markdown(
@@ -720,9 +788,9 @@ with mechanism_tab:
         contrast_card(
             "ADIC / 責任OS",
             [
-                "責任が次に渡ったか",
+                "止める責任が次に渡ったか",
                 "条件未達なら止まるか",
-                "空白が残っていないか",
+                "誰が止めるのかが消えていないか",
                 "後から同じ判断を検査できるか",
             ],
             "contrast-right",
@@ -731,8 +799,9 @@ with mechanism_tab:
     st.markdown(
         """
         <div class="conclusion-card">
-            次世代内部統制とは、事故後に説明資料を集めることではありません。<br>
-            本番運用に入る前に、責任が空白になる場所を見つけ、そこで止められる仕組みです。
+            ADIC / 責任OSが経営に渡す答えは、リスク点数ではありません。<br>
+            「この仕組みを本番運用に入れてよいか」という判定です。<br>
+            そのために、仕事の流れと、止める責任と、後から確かめられる記録がつながっているかを検査します。
         </div>
         """,
         unsafe_allow_html=True,
