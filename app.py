@@ -298,57 +298,57 @@ def status_card(label: str, value: str) -> None:
 def decide_gate(checks: dict[str, bool]) -> tuple[str, str, str]:
     missing = [label for label, checked in checks.items() if not checked]
     critical = {
-        "判断した人がわかる",
-        "受け入れた側がわかる",
+        "誰が何を引き受けるかが決まっている",
+        "受け入れる側の役割が決まっている",
         "止める条件が決まっている",
-        "受け渡し時に止める条件を見た",
-        "受け入れたか断ったかが残っている",
+        "止める条件が運用に組み込まれている",
+        "受け入れたか断ったかが残る",
     }
 
     if not missing:
         return (
             "PASS",
             "green",
-            "会社の判断として通してよい状態です。",
+            "正式運用に入れてよい状態です。",
         )
     if any(item in critical for item in missing):
         return (
             "STOP",
             "red",
-            "まだ会社の判断として扱ってはいけません。",
+            "まだ正式運用に入れてはいけません。",
         )
     return (
         "NEEDS EVIDENCE",
         "yellow",
-        "足りない証拠を足してから判断してください。",
+        "正式運用の前に、足りない証拠の残し方を追加してください。",
     )
 
 
 def executive_summary(verdict: str) -> str:
     if verdict == "PASS":
         return (
-            "このAIの提案による受け渡しは、会社の判断として扱えます。"
-            "誰が関わり、何を見て、どの条件なら止めるべきだったか、"
-            "そして受け入れ結果が残っているためです。"
+            "この自動化フローは、正式運用に入れてよい状態です。"
+            "誰が何を引き受けるか、何を見て通すか、どんな時に止まるか、"
+            "そして結果をどう残すかが設計されているためです。"
         )
     if verdict == "STOP":
         return (
-            "このAIの提案による受け渡しは、作業としては可能でした。"
-            "しかし、受け渡しの条件がはっきり残っていないため、"
-            "まだ会社の判断として扱うべきではありません。"
+            "この自動化フローは、運用開始できそうに見えます。"
+            "しかし、責任の移り方や止まる条件が十分に設計されていないため、"
+            "まだ正式運用に入れるべきではありません。"
         )
     return (
-        "このAIの提案による受け渡しは、会社の判断として扱う前に、"
-        "足りない証拠を追加する必要があります。"
+        "この自動化フローは、正式運用に入れる前に、"
+        "足りない証拠の残し方を追加する必要があります。"
     )
 
 
 def management_values(verdict: str) -> tuple[str, str]:
     if verdict == "PASS":
-        return "成立", "会社の判断として扱う。"
+        return "可", "本番運用に入れる。"
     if verdict == "STOP":
-        return "未成立", "まだ会社の判断として扱わない。"
-    return "証拠不足", "足りない証拠を足すまで保留する。"
+        return "不可", "本番運用に入れず、責任の流れと止める条件を直す。"
+    return "保留", "足りない証拠の残し方を足してから、もう一度見る。"
 
 
 def management_card(verdict: str) -> None:
@@ -357,15 +357,19 @@ def management_card(verdict: str) -> None:
         f"""
         <div class="decision-card">
             <div class="decision-row">
-                <div class="decision-label">作業の状態</div>
-                <div class="decision-value">完了</div>
+                <div class="decision-label">業務フロー案</div>
+                <div class="decision-value">作成済み</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">承認の状態</div>
-                <div class="decision-value">承認済み</div>
+                <div class="decision-label">リスク分類</div>
+                <div class="decision-value">実施済み</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">会社が引き受けられるか</div>
+                <div class="decision-label">ログ設計</div>
+                <div class="decision-value">あり</div>
+            </div>
+            <div class="decision-row">
+                <div class="decision-label">正式運用してよいか</div>
                 <div class="decision-value">{accountability_status}</div>
             </div>
             <div class="decision-row">
@@ -381,11 +385,11 @@ def management_card(verdict: str) -> None:
 with st.sidebar:
     st.markdown("### Responsibility OS")
     st.markdown("このデモで見る問いは1つです。")
-    st.markdown("**会社として、この判断を引き受けてよいか？**")
+    st.markdown("**この仕組みを、本番運用に入れてよいか？**")
     st.markdown(f"[GitHub repository]({GITHUB_URL})")
     st.divider()
     st.markdown("**これは何か**")
-    st.markdown("リスク管理の前に置く、会社の判断として通せるかを見る入口です。")
+    st.markdown("リスク管理の前に置く、正式運用してよいかを見る入口です。")
     st.markdown("**これは何ではないか**")
     st.markdown("- Leanの画面ではありません\n- 数学の説明ではありません\n- リスク点数を出すアプリではありません")
 
@@ -394,13 +398,13 @@ st.markdown(
     """
     <div class="hero">
         <div class="eyebrow">Responsibility OS / ADIC</div>
-        <div class="hero-title">会社として、この判断を引き受けてよいか？</div>
+        <div class="hero-title">その仕組み、本番運用に入れてよいですか？</div>
         <div class="hero-subtitle">
-            このデモは、画面が全部「緑」でも、会社がAIの提案を
-            自分たちの判断として受け止められないことがある、という話です。
+            リスク分類・承認・ログ設計がそろっていても、
+            会社の正式な業務として運用してよいとは限りません。
         </div>
         <div class="spine">
-            判断のリスクを見る前に、会社がその判断を引き受けられるかを見る。
+            リスクを見る前に、その仕組みを会社の正式運用にしてよいかを見る。
         </div>
     </div>
     """,
@@ -409,7 +413,7 @@ st.markdown(
 
 st.header("見る順番を変える")
 st.markdown(
-    '<div class="section-note">問題はリスク管理そのものではありません。リスクを最初に聞いてしまう順番です。</div>',
+    '<div class="section-note">問題はリスク管理そのものではありません。本番運用の前に、見る順番があるという話です。</div>',
     unsafe_allow_html=True,
 )
 left, right = st.columns(2)
@@ -417,26 +421,27 @@ with left:
     path_box(
         "よくある順番",
         [
-            "このAIやシステムのリスクは何か",
+            "このシステムのリスクは何か",
             "承認されたか",
-            "ログはあるか",
-            "作業は終わったか",
+            "ログは取れるか",
+            "運用開始できるか",
         ],
-        "結果: 画面は緑。でも、会社がその判断を引き受けられるとは限らない。",
+        "結果: 本番運用できそうに見える。でも、会社の正式な仕組みとして責任を負えるとは限らない。",
         "path-risk",
         "yellow-box",
     )
 with right:
     path_box(
-        "ADICの順番",
+        "責任OS / ADICの順番",
         [
-            "会社としてこの判断を引き受けてよいか",
-            "誰が受け入れたか",
-            "何を見て判断したか",
-            "どんな時なら止めるべきだったか",
+            "この仕組みを正式運用にしてよいか",
+            "誰が何を引き受ける設計か",
+            "何を見て通す設計か",
+            "どんな時に止まる設計か",
+            "後から同じ説明ができる設計か",
             "その後で、残るリスクを分類して管理する",
         ],
-        "結果: 会社が引き受けられる状態になってから、リスク管理が始まる。",
+        "結果: 正式運用に耐える仕組みになってから、リスク管理が始まる。",
         "path-responsibility",
         "green-box",
     )
@@ -444,28 +449,29 @@ with right:
 html_block(
     """
     <strong>大事な点:</strong> リスク分類は役に立ちます。
-    ただし、会社がその判断を引き受けられるかが分からないうちに、
-    最初の問いにしてしまうと順番が違います。
+    ただし、その仕組みを会社の正式運用にしてよいか分からないうちに、
+    リスク分類を最初の問いにしてしまうと順番が違います。
     """,
     "blue-box",
 )
 
 top_cols = st.columns(4)
 with top_cols[0]:
-    mini_card("最初の問い", "会社として、この判断を引き受けてよいか。")
+    mini_card("最初の問い", "この仕組みを、本番運用に入れてよいか。")
 with top_cols[1]:
-    mini_card("緑でも足りない", "完了、承認、ログあり。でも引き受けられるとは限りません。")
+    mini_card("緑でも足りない", "承認、ログあり。でも正式運用できるとは限りません。")
 with top_cols[2]:
     mini_card("ADICは前段", "リスク管理を始めてよいかを見る入口です。")
 with top_cols[3]:
-    mini_card("出力はシンプル", "通す、止める、証拠を足す。この3つです。")
+    mini_card("出力はシンプル", "本番へ進む、止める、設計を足す。この3つです。")
 
 st.header("シナリオ")
 html_block(
     """
-    <strong>冷蔵品の受け渡し。</strong><br>
-    AIが、配送時間・コスト・在庫効率をよくするために、
-    冷蔵品を倉庫Aで受け渡すことを提案しました。
+    <strong>冷蔵品の受け渡し業務。</strong><br>
+    会社は、冷蔵品の受け渡しに新しい自動化フローを入れようとしています。
+    この仕組みでは、配送時間・コスト・在庫効率をよくするため、
+    倉庫Aでの受け渡しを標準フローに組み込みます。
     """
 )
 
@@ -488,29 +494,28 @@ with card_cols[4]:
 
 html_block(
     """
-    <strong>これで分かること:</strong> 作業が行われたこと。<br>
-    <strong>まだ分からないこと:</strong> 会社がその判断を自分たちの判断として
-    引き受けてよいか。
+    <strong>これで分かること:</strong> 運用開始の準備が進んでいること。<br>
+    <strong>まだ分からないこと:</strong> 会社の正式な業務として動かしてよいか。
     """,
     "yellow-box",
 )
 
 html_block(
     """
-    <strong>会社はこの質問に答えられますか？</strong>
+    <strong>正式運用に入れる前に、この質問に答えられますか？</strong>
     <ul>
-        <li>誰が受け渡しの責任を引き受けたか。</li>
-        <li>受け入れる前に、何を確認したか。</li>
-        <li>どんな状態なら止めるべきだったか。</li>
-        <li>出荷、品質、法務、経営があとで同じ説明を読めるか。</li>
+        <li>誰が、何を引き受ける設計か。</li>
+        <li>何を見て、受け渡しを通す設計か。</li>
+        <li>どんな状態なら止まる設計か。</li>
+        <li>出荷、品質、法務、経営があとで同じ説明を読める設計か。</li>
     </ul>
-    <strong>今の結果:</strong> 作業は終わっています。でも、会社の判断としては
-    まだ引き受けられません。
+    <strong>今の結果:</strong> 運用開始できそうに見えます。でも、会社の正式な業務としては
+    まだ通せません。
     """,
     "red-box",
 )
 
-st.header("同じ結果に見えてしまう例")
+st.header("同じ運用結果に見えてしまう例")
 st.markdown(
     '<div class="section-note">責任の流れが違っても、画面上は同じ結果に見えることがあります。</div>',
     unsafe_allow_html=True,
@@ -520,13 +525,13 @@ with left:
     st.markdown(
         """
         <div class="case-box case-good">
-            <div class="case-title">ケースA: 引き受けられる受け渡し</div>
+            <div class="case-title">ケースA: 正式運用にできる仕組み</div>
             <ul>
-                <li>運送会社が温度の証拠を出す</li>
-                <li>倉庫がそれを確認する</li>
-                <li>止める条件を確認する</li>
-                <li>倉庫が受け入れる</li>
-                <li>責任が空白なく移る</li>
+                <li>運送会社が出す証拠が決まっている</li>
+                <li>倉庫が確認する内容が決まっている</li>
+                <li>止める条件が組み込まれている</li>
+                <li>受け入れ結果が残る</li>
+                <li>責任の移り方が説明できる</li>
             </ul>
         </div>
         """,
@@ -536,13 +541,13 @@ with right:
     st.markdown(
         """
         <div class="case-box case-bad">
-            <div class="case-title">ケースB: 引き受けられない受け渡し</div>
+            <div class="case-title">ケースB: 正式運用にできない仕組み</div>
             <ul>
-                <li>AIが受け渡しを提案する</li>
+                <li>AIが受け渡し先を決める</li>
                 <li>温度データはどこかにある</li>
-                <li>倉庫が品物を受け取る</li>
-                <li>受け入れ条件がはっきり残っていない</li>
-                <li>その場で止める条件を確認していない</li>
+                <li>倉庫は品物を受け取れる</li>
+                <li>受け入れ条件が設計されていない</li>
+                <li>止まる条件が運用に組み込まれていない</li>
             </ul>
         </div>
         """,
@@ -554,33 +559,33 @@ st.markdown(
     unsafe_allow_html=True,
 )
 html_block(
-    "<strong>見える結果は同じ。でも、会社が引き受けられるかは違います。ここが内部統制の失敗点です。</strong>",
+    "<strong>見える結果は同じ。でも、正式運用にしてよい仕組みかは違います。ここが内部統制の失敗点です。</strong>",
     "red-box",
 )
 
-st.header("会社の判断として通してよいか")
+st.header("正式運用に入れてよいか")
 st.markdown(
-    '<div class="section-note">これは書類を増やすチェックリストではありません。会社がその判断を引き受ける前の、通すか止めるかの判定です。</div>',
+    '<div class="section-note">これは書類を増やすチェックリストではありません。この仕組みを会社の標準業務として動かしてよいかを見る、本番運用前のゲートです。</div>',
     unsafe_allow_html=True,
 )
 
 items = [
-    "判断した人がわかる",
-    "受け入れた側がわかる",
-    "受け渡し時に見た証拠が残っている",
+    "誰が何を引き受けるかが決まっている",
+    "受け入れる側の役割が決まっている",
+    "通す前に見る証拠が決まっている",
     "止める条件が決まっている",
-    "受け渡し時に止める条件を見た",
-    "受け入れたか断ったかが残っている",
+    "止める条件が運用に組み込まれている",
+    "受け入れたか断ったかが残る",
     "出荷、品質、法務、経営があとで同じ説明を読める",
 ]
 
 defaults = {
-    "判断した人がわかる": True,
-    "受け入れた側がわかる": True,
-    "受け渡し時に見た証拠が残っている": False,
+    "誰が何を引き受けるかが決まっている": True,
+    "受け入れる側の役割が決まっている": True,
+    "通す前に見る証拠が決まっている": False,
     "止める条件が決まっている": False,
-    "受け渡し時に止める条件を見た": False,
-    "受け入れたか断ったかが残っている": False,
+    "止める条件が運用に組み込まれている": False,
+    "受け入れたか断ったかが残る": False,
     "出荷、品質、法務、経営があとで同じ説明を読める": False,
 }
 
@@ -591,14 +596,14 @@ for index, item in enumerate(items):
         checks[item] = st.checkbox(item, value=defaults[item])
 
 score = sum(1 for checked in checks.values() if checked)
-st.progress(score / len(items), text=f"{score} / {len(items)} 個の条件がそろっています")
+st.progress(score / len(items), text=f"{score} / {len(items)} 個の運用条件がそろっています")
 
 verdict, color, message = decide_gate(checks)
 html_block(f"<strong>{verdict}:</strong> {message}", f"{color}-box verdict")
 
 missing_items = [item for item, checked in checks.items() if not checked]
 if missing_items:
-    st.markdown("**会社が引き受ける前に足りないもの**")
+    st.markdown("**本番運用に入れる前に足りないもの**")
     st.markdown(
         " ".join(f'<span class="pill">{item}</span>' for item in missing_items),
         unsafe_allow_html=True,
@@ -616,7 +621,7 @@ with left:
     html_block(
         """
         <strong>リスク管理が聞くこと:</strong><br>
-        実行したあと、何が悪くなり得るか。
+        この仕組みを運用したあと、何が悪くなり得るか。
         """,
         "yellow-box",
     )
@@ -624,15 +629,15 @@ with right:
     html_block(
         """
         <strong>ADICが聞くこと:</strong><br>
-        そもそも、この判断を会社の判断として引き受けてよいか。
+        そもそも、この仕組みを会社の正式運用にしてよいか。
         """,
         "blue-box",
     )
 
 html_block(
     """
-    ADICは、リスク分類のあとに足す管理ではありません。
-    リスク分類やリスク管理を始めてよいかを先に見る、内部統制の入口です。
+    ADIC / 責任OSは、AIや自動化の仕組みを会社の正式運用に入れてよいかを判定する、
+    次世代の内部統制ゲートです。
     """
 )
 
