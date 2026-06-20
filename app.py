@@ -80,23 +80,8 @@ st.markdown(
         margin-top: -0.35rem;
         margin-bottom: 0.8rem;
     }
-    .mini-card, .status-card, .case-box, .box, .path-box, .decision-card {
+    .box, .path-box, .status-card, .inspection-panel, .node, .decision-card {
         border-radius: 8px;
-    }
-    .mini-card {
-        border: 1px solid var(--line);
-        background: #ffffff;
-        padding: 0.95rem 1rem;
-        min-height: 118px;
-    }
-    .mini-title {
-        color: var(--ink);
-        font-weight: 800;
-        margin-bottom: 0.35rem;
-    }
-    .mini-copy {
-        color: var(--muted);
-        font-size: 0.93rem;
     }
     .box {
         border: 1px solid var(--line);
@@ -128,7 +113,7 @@ st.markdown(
         border: 1px solid var(--line);
         background: #ffffff;
         padding: 1rem 1.15rem;
-        min-height: 370px;
+        min-height: 285px;
     }
     .path-risk {
         border-top: 5px solid var(--yellow-border);
@@ -160,7 +145,7 @@ st.markdown(
         border: 1px solid var(--green-border);
         background: var(--green-bg);
         padding: 0.9rem;
-        min-height: 105px;
+        min-height: 100px;
     }
     .status-label {
         color: var(--muted);
@@ -172,51 +157,102 @@ st.markdown(
         font-size: 1.15rem;
         font-weight: 800;
     }
-    .case-box {
+    .inspection-panel {
         border: 1px solid var(--line);
         background: #ffffff;
-        padding: 1rem 1.15rem;
-        min-height: 300px;
+        padding: 1.1rem;
+        min-height: 600px;
     }
-    .case-good {
-        border-top: 5px solid var(--green-border);
-    }
-    .case-bad {
-        border-top: 5px solid var(--red-border);
-    }
-    .case-title {
+    .panel-title {
         color: var(--ink);
-        font-size: 1.05rem;
-        font-weight: 850;
-        margin-bottom: 0.55rem;
-    }
-    .collapse-result {
-        text-align: center;
-        border: 2px solid var(--line);
-        border-radius: 8px;
-        background: #ffffff;
-        padding: 1rem;
-        font-size: 1.25rem;
-        font-weight: 850;
-        color: var(--ink);
-        margin-top: 0.9rem;
-    }
-    .verdict {
-        border-radius: 8px;
-        padding: 1.05rem 1.2rem;
         font-size: 1.08rem;
         font-weight: 850;
-        margin-top: 0.8rem;
+        margin-bottom: 0.65rem;
     }
-    .pill {
-        display: inline-block;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 0.22rem 0.55rem;
-        margin: 0.14rem;
-        background: #ffffff;
+    .green-strip {
+        border-top: 5px solid var(--green-border);
+    }
+    .red-strip {
+        border-top: 5px solid var(--red-border);
+    }
+    .dashboard-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        border: 1px solid var(--green-border);
+        background: var(--green-bg);
+        color: var(--green-text);
+        border-radius: 8px;
+        padding: 0.76rem 0.85rem;
+        margin-bottom: 0.55rem;
+        font-weight: 800;
+    }
+    .looks-ok {
+        text-align: center;
+        border: 1px solid var(--yellow-border);
+        background: var(--yellow-bg);
+        color: var(--yellow-text);
+        border-radius: 8px;
+        padding: 0.9rem;
+        margin-top: 1rem;
+        font-weight: 850;
+    }
+    .node {
+        border: 1px solid var(--green-border);
+        background: var(--green-bg);
+        color: var(--green-text);
+        padding: 0.8rem 0.9rem;
+    }
+    .node-broken {
+        border: 2px solid var(--red-border);
+        background: var(--red-bg);
+        color: var(--red-text);
+        box-shadow: 0 0 0 4px rgba(217, 74, 74, 0.08);
+    }
+    .node-title {
+        font-weight: 850;
+        color: var(--ink);
+        margin-bottom: 0.25rem;
+    }
+    .node-broken .node-title {
+        color: var(--red-text);
+    }
+    .node-copy {
+        font-size: 0.93rem;
+    }
+    .arrow {
+        text-align: center;
         color: var(--muted);
-        font-size: 0.82rem;
+        font-weight: 850;
+        font-size: 1.35rem;
+        line-height: 1.45;
+    }
+    .break-label {
+        border: 1px solid var(--red-border);
+        background: #ffffff;
+        color: var(--red-text);
+        border-radius: 8px;
+        padding: 0.7rem 0.85rem;
+        font-weight: 800;
+        margin: 0.55rem 0;
+    }
+    .stop-card {
+        border: 2px solid var(--red-border);
+        background: var(--red-bg);
+        color: var(--red-text);
+        border-radius: 8px;
+        padding: 1.2rem;
+        text-align: center;
+        margin: 1rem 0;
+    }
+    .stop-title {
+        font-size: 1.7rem;
+        font-weight: 900;
+        margin-bottom: 0.3rem;
+    }
+    .stop-copy {
+        font-weight: 800;
     }
     .decision-card {
         border: 1px solid var(--line);
@@ -242,6 +278,9 @@ st.markdown(
         font-weight: 850;
         text-align: right;
     }
+    .decision-value-red {
+        color: var(--red-text);
+    }
     .footer-link {
         color: var(--blue);
         font-weight: 700;
@@ -255,18 +294,6 @@ st.markdown(
 
 def html_block(body: str, extra_class: str = "") -> None:
     st.markdown(f'<div class="box {extra_class}">{body}</div>', unsafe_allow_html=True)
-
-
-def mini_card(title: str, copy: str) -> None:
-    st.markdown(
-        f"""
-        <div class="mini-card">
-            <div class="mini-title">{title}</div>
-            <div class="mini-copy">{copy}</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
 
 def path_box(title: str, steps: list[str], result: str, path_class: str, result_class: str) -> None:
@@ -295,66 +322,84 @@ def status_card(label: str, value: str) -> None:
     )
 
 
-def decide_gate(checks: dict[str, bool]) -> tuple[str, str, str]:
-    missing = [label for label, checked in checks.items() if not checked]
-    critical = {
-        "誰が何を引き受けるかが決まっている",
-        "受け入れる側の役割が決まっている",
-        "止める条件が決まっている",
-        "止める条件が運用に組み込まれている",
-        "受け入れたか断ったかが残る",
-    }
-
-    if not missing:
-        return (
-            "PASS",
-            "green",
-            "正式運用に入れてよい状態です。",
-        )
-    if any(item in critical for item in missing):
-        return (
-            "STOP",
-            "red",
-            "まだ正式運用に入れてはいけません。",
-        )
-    return (
-        "NEEDS EVIDENCE",
-        "yellow",
-        "正式運用の前に、足りない証拠の残し方を追加してください。",
+def dashboard_item(label: str) -> None:
+    st.markdown(
+        f'<div class="dashboard-item"><span>{label}</span><span>OK</span></div>',
+        unsafe_allow_html=True,
     )
 
 
-def executive_summary(verdict: str) -> str:
-    if verdict == "PASS":
-        return (
-            "この自動化フローは、正式運用に入れてよい状態です。"
-            "誰が何を引き受けるか、何を見て通すか、どんな時に止まるか、"
-            "そして結果をどう残すかが設計されているためです。"
-        )
-    if verdict == "STOP":
-        return (
-            "この自動化フローは、運用開始できそうに見えます。"
-            "しかし、責任の移り方や止まる条件が十分に設計されていないため、"
-            "まだ正式運用に入れるべきではありません。"
-        )
-    return (
-        "この自動化フローは、正式運用に入れる前に、"
-        "足りない証拠の残し方を追加する必要があります。"
-    )
-
-
-def management_values(verdict: str) -> tuple[str, str]:
-    if verdict == "PASS":
-        return "可", "本番運用に入れる。"
-    if verdict == "STOP":
-        return "不可", "本番運用に入れず、責任の流れと止める条件を直す。"
-    return "保留", "足りない証拠の残し方を足してから、もう一度見る。"
-
-
-def management_card(verdict: str) -> None:
-    accountability_status, action = management_values(verdict)
+def inspection_node(title: str, copy: str, broken: bool = False) -> None:
+    klass = "node node-broken" if broken else "node"
     st.markdown(
         f"""
+        <div class="{klass}">
+            <div class="node-title">{title}</div>
+            <div class="node-copy">{copy}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def arrow() -> None:
+    st.markdown('<div class="arrow">↓</div>', unsafe_allow_html=True)
+
+
+def conventional_panel() -> None:
+    items = ["リスク分類", "承認", "温度ログ", "監査ログ", "配送完了"]
+    item_html = "".join(
+        f'<div class="dashboard-item"><span>{item}</span><span>OK</span></div>'
+        for item in items
+    )
+    st.markdown(
+        f"""
+        <div class="inspection-panel green-strip">
+            <div class="panel-title">従来管理</div>
+            {item_html}
+            <div class="looks-ok">一見、本番運用できそう</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def adic_inspection_panel() -> None:
+    st.markdown(
+        """
+        <div class="inspection-panel red-strip">
+            <div class="panel-title">ADIC / 責任OSの検査</div>
+            <div class="node">
+                <div class="node-title">荷主</div>
+                <div class="node-copy">何を渡すかが決まっている</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="node">
+                <div class="node-title">配送会社</div>
+                <div class="node-copy">温度証拠を渡す相手とタイミングが決まっている</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="node node-broken">
+                <div class="node-title">中継倉庫</div>
+                <div class="node-copy">受け入れ条件と停止条件が、責任の移り方に結びついていない</div>
+            </div>
+            <div class="break-label">
+                ここで切れる: 誰が、どの条件で責任を受け取ったかを後から説明できない
+            </div>
+            <div class="arrow">↓</div>
+            <div class="node node-broken">
+                <div class="node-title">納品先</div>
+                <div class="node-copy">前の受け渡しが切れているため、正式運用の検査を先に進めない</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def management_card() -> None:
+    st.markdown(
+        """
         <div class="decision-card">
             <div class="decision-row">
                 <div class="decision-label">業務フロー案</div>
@@ -370,11 +415,11 @@ def management_card(verdict: str) -> None:
             </div>
             <div class="decision-row">
                 <div class="decision-label">正式運用してよいか</div>
-                <div class="decision-value">{accountability_status}</div>
+                <div class="decision-value decision-value-red">不可</div>
             </div>
             <div class="decision-row">
                 <div class="decision-label">経営としての対応</div>
-                <div class="decision-value">{action}</div>
+                <div class="decision-value">本番運用に入れず、中継倉庫の責任条件を直す。</div>
             </div>
         </div>
         """,
@@ -385,11 +430,11 @@ def management_card(verdict: str) -> None:
 with st.sidebar:
     st.markdown("### Responsibility OS")
     st.markdown("このデモで見る問いは1つです。")
-    st.markdown("**この仕組みを、本番運用に入れてよいか？**")
+    st.markdown("**その仕組み、本番運用に入れてよいですか？**")
     st.markdown(f"[GitHub repository]({GITHUB_URL})")
     st.divider()
     st.markdown("**これは何か**")
-    st.markdown("リスク管理の前に置く、正式運用してよいかを見る入口です。")
+    st.markdown("業務フローを順にたどり、責任のつながりが切れる場所を見つける検査です。")
     st.markdown("**これは何ではないか**")
     st.markdown("- Leanの画面ではありません\n- 数学の説明ではありません\n- リスク点数を出すアプリではありません")
 
@@ -404,7 +449,7 @@ st.markdown(
             会社の正式な業務として運用してよいとは限りません。
         </div>
         <div class="spine">
-            リスクを見る前に、その仕組みを会社の正式運用にしてよいかを見る。
+            ADIC / 責任OSは、業務フローを順にたどり、責任のつながりが切れる場所を検査します。
         </div>
     </div>
     """,
@@ -412,10 +457,6 @@ st.markdown(
 )
 
 st.header("見る順番を変える")
-st.markdown(
-    '<div class="section-note">問題はリスク管理そのものではありません。本番運用の前に、見る順番があるという話です。</div>',
-    unsafe_allow_html=True,
-)
 left, right = st.columns(2)
 with left:
     path_box(
@@ -426,44 +467,24 @@ with left:
             "ログは取れるか",
             "運用開始できるか",
         ],
-        "結果: 本番運用できそうに見える。でも、会社の正式な仕組みとして責任を負えるとは限らない。",
+        "本番運用できそうに見える。でも、責任のつながりはまだ見えていない。",
         "path-risk",
         "yellow-box",
     )
 with right:
     path_box(
-        "責任OS / ADICの順番",
+        "ADIC / 責任OSの順番",
         [
-            "この仕組みを正式運用にしてよいか",
-            "誰が何を引き受ける設計か",
-            "何を見て通す設計か",
-            "どんな時に止まる設計か",
-            "後から同じ説明ができる設計か",
-            "その後で、残るリスクを分類して管理する",
+            "業務フローを順にたどる",
+            "誰が何を渡すかを見る",
+            "何を確認して渡すかを見る",
+            "どこで止められるかを見る",
+            "責任が切れた場所で止める",
         ],
-        "結果: 正式運用に耐える仕組みになってから、リスク管理が始まる。",
+        "正式運用に耐える仕組みかを先に見る。",
         "path-responsibility",
         "green-box",
     )
-
-html_block(
-    """
-    <strong>大事な点:</strong> リスク分類は役に立ちます。
-    ただし、その仕組みを会社の正式運用にしてよいか分からないうちに、
-    リスク分類を最初の問いにしてしまうと順番が違います。
-    """,
-    "blue-box",
-)
-
-top_cols = st.columns(4)
-with top_cols[0]:
-    mini_card("最初の問い", "この仕組みを、本番運用に入れてよいか。")
-with top_cols[1]:
-    mini_card("緑でも足りない", "承認、ログあり。でも正式運用できるとは限りません。")
-with top_cols[2]:
-    mini_card("ADICは前段", "リスク管理を始めてよいかを見る入口です。")
-with top_cols[3]:
-    mini_card("出力はシンプル", "本番へ進む、止める、設計を足す。この3つです。")
 
 st.header("シナリオ")
 html_block(
@@ -475,9 +496,9 @@ html_block(
     """
 )
 
-st.header("今の管理画面ではこう見える")
+st.header("従来の管理画面は全部グリーン")
 st.markdown(
-    '<div class="section-note">ふつうの管理画面では、下の項目はすべて緑に見えます。</div>',
+    '<div class="section-note">ここだけ見ると、本番運用できそうに見えます。</div>',
     unsafe_allow_html=True,
 )
 card_cols = st.columns(5)
@@ -488,132 +509,47 @@ with card_cols[1]:
 with card_cols[2]:
     status_card("温度ログ", "あり")
 with card_cols[3]:
-    status_card("配送", "完了")
-with card_cols[4]:
     status_card("監査ログ", "あり")
+with card_cols[4]:
+    status_card("配送", "完了")
 
-html_block(
-    """
-    <strong>これで分かること:</strong> 運用開始の準備が進んでいること。<br>
-    <strong>まだ分からないこと:</strong> 会社の正式な業務として動かしてよいか。
-    """,
-    "yellow-box",
-)
-
-html_block(
-    """
-    <strong>正式運用に入れる前に、この質問に答えられますか？</strong>
-    <ul>
-        <li>誰が、何を引き受ける設計か。</li>
-        <li>何を見て、受け渡しを通す設計か。</li>
-        <li>どんな状態なら止まる設計か。</li>
-        <li>出荷、品質、法務、経営があとで同じ説明を読める設計か。</li>
-    </ul>
-    <strong>今の結果:</strong> 運用開始できそうに見えます。でも、会社の正式な業務としては
-    まだ通せません。
-    """,
-    "red-box",
-)
-
-st.header("同じ運用結果に見えてしまう例")
+st.header("ADIC / 責任OSの検査結果")
 st.markdown(
-    '<div class="section-note">責任の流れが違っても、画面上は同じ結果に見えることがあります。</div>',
+    '<div class="section-note">説明ではなく、検査結果として見せます。切れる場所は1か所だけです。</div>',
     unsafe_allow_html=True,
 )
-left, right = st.columns(2)
+
+left, right = st.columns([0.92, 1.08])
 with left:
-    st.markdown(
-        """
-        <div class="case-box case-good">
-            <div class="case-title">ケースA: 正式運用にできる仕組み</div>
-            <ul>
-                <li>運送会社が出す証拠が決まっている</li>
-                <li>倉庫が確認する内容が決まっている</li>
-                <li>止める条件が組み込まれている</li>
-                <li>受け入れ結果が残る</li>
-                <li>責任の移り方が説明できる</li>
-            </ul>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    conventional_panel()
+
 with right:
-    st.markdown(
-        """
-        <div class="case-box case-bad">
-            <div class="case-title">ケースB: 正式運用にできない仕組み</div>
-            <ul>
-                <li>AIが受け渡し先を決める</li>
-                <li>温度データはどこかにある</li>
-                <li>倉庫は品物を受け取れる</li>
-                <li>受け入れ条件が設計されていない</li>
-                <li>止まる条件が運用に組み込まれていない</li>
-            </ul>
+    adic_inspection_panel()
+
+st.markdown(
+    """
+    <div class="stop-card">
+        <div class="stop-title">STOP</div>
+        <div class="stop-copy">
+            責任のつながりが中継倉庫で切れているため、この仕組みは本番運用に入れてはいけません。
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-st.markdown(
-    '<div class="collapse-result">どちらも画面上は「配送完了」に見える</div>',
+    </div>
+    """,
     unsafe_allow_html=True,
 )
+
 html_block(
-    "<strong>見える結果は同じ。でも、正式運用にしてよい仕組みかは違います。ここが内部統制の失敗点です。</strong>",
-    "red-box",
+    """
+    <strong>ADIC / 責任OSが見ていること:</strong><br>
+    ログがあるかではありません。受け渡しごとに、
+    誰が何を受け取り、何を確認し、どこで止められるかを順にたどります。
+    つながりが切れる場所があれば、管理画面が全部緑でも本番運用には入れません。
+    """,
+    "blue-box",
 )
-
-st.header("正式運用に入れてよいか")
-st.markdown(
-    '<div class="section-note">これは書類を増やすチェックリストではありません。この仕組みを会社の標準業務として動かしてよいかを見る、本番運用前のゲートです。</div>',
-    unsafe_allow_html=True,
-)
-
-items = [
-    "誰が何を引き受けるかが決まっている",
-    "受け入れる側の役割が決まっている",
-    "通す前に見る証拠が決まっている",
-    "止める条件が決まっている",
-    "止める条件が運用に組み込まれている",
-    "受け入れたか断ったかが残る",
-    "出荷、品質、法務、経営があとで同じ説明を読める",
-]
-
-defaults = {
-    "誰が何を引き受けるかが決まっている": True,
-    "受け入れる側の役割が決まっている": True,
-    "通す前に見る証拠が決まっている": False,
-    "止める条件が決まっている": False,
-    "止める条件が運用に組み込まれている": False,
-    "受け入れたか断ったかが残る": False,
-    "出荷、品質、法務、経営があとで同じ説明を読める": False,
-}
-
-check_cols = st.columns(2)
-checks: dict[str, bool] = {}
-for index, item in enumerate(items):
-    with check_cols[index % 2]:
-        checks[item] = st.checkbox(item, value=defaults[item])
-
-score = sum(1 for checked in checks.values() if checked)
-st.progress(score / len(items), text=f"{score} / {len(items)} 個の運用条件がそろっています")
-
-verdict, color, message = decide_gate(checks)
-html_block(f"<strong>{verdict}:</strong> {message}", f"{color}-box verdict")
-
-missing_items = [item for item, checked in checks.items() if not checked]
-if missing_items:
-    st.markdown("**本番運用に入れる前に足りないもの**")
-    st.markdown(
-        " ".join(f'<span class="pill">{item}</span>' for item in missing_items),
-        unsafe_allow_html=True,
-    )
 
 st.header("経営向けの出力")
-management_card(verdict)
-
-st.header("短い説明")
-html_block(executive_summary(verdict), f"{color}-box")
+management_card()
 
 st.header("ADICはリスク管理ではない")
 left, right = st.columns(2)
@@ -636,8 +572,8 @@ with right:
 
 html_block(
     """
-    ADIC / 責任OSは、AIや自動化の仕組みを会社の正式運用に入れてよいかを判定する、
-    次世代の内部統制ゲートです。
+    小さな補足: これは形式検証の考え方を、業務向けに見せたものです。
+    難しい数式ではなく、業務フローを順にたどり、切れ目を見つける検査として使います。
     """
 )
 
