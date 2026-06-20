@@ -1,65 +1,73 @@
-# Responsibility OS Internal Control Demo
+# Responsibility OS 内部統制デモ
 
-Streamlit demo for one simple question:
+このStreamlitデモで見る問いは1つです。
 
-**Can the company own this AI-assisted decision?**
+**その仕組み、本番運用に入れてよいですか？**
 
 Repository:
 [GhostDriftTheory/responsibility-os-internal-control-demo](https://github.com/GhostDriftTheory/responsibility-os-internal-control-demo)
 
-## Core Message
+## いちばん伝えたいこと
 
-Before managing the risk of a decision, a company must know whether it can own the decision.
+リスクを見る前に、その仕組みを会社の正式運用にしてよいかを見る。
 
-Risk classification, approval, and logs are useful. They can show that a process happened. They do not always show that the company can accept the decision as its own business action.
+リスク分類、承認、ログ設計は役に立ちます。  
+でも、それだけでは「会社の正式な業務として動かしてよい」とは言えない場合があります。
 
-## The Priority Shift
+ADIC / 責任OSは、AIや自動化の仕組みを会社の正式運用に入れてよいかを判定する、次世代の内部統制ゲートです。
 
-Current governance often starts with:
+## 見る順番を変える
 
-1. What risk class is this AI or system?
-2. Was it approved?
-3. Are logs available?
-4. Did the operation complete?
+よくある順番:
 
-Responsibility OS / ADIC starts with:
+1. このシステムのリスクは何か
+2. 承認されたか
+3. ログは取れるか
+4. 運用開始できるか
 
-1. Can the company own this decision?
-2. Who accepted responsibility?
-3. What evidence was attached to the decision?
-4. What condition would have stopped it?
-5. Only then: classify and manage the remaining risk.
+責任OS / ADICの順番:
 
-The problem is not that risk classification is useless. The problem is that risk classification is being asked before the company knows whether the decision can become its accountable action.
+1. この仕組みを正式運用にしてよいか
+2. 誰が何を引き受ける設計か
+3. 何を見て通す設計か
+4. どんな時に止まる設計か
+5. 後から同じ説明ができる設計か
+6. その後で、残るリスクを分類して管理する
 
-## What The Demo Shows
+リスク分類が不要なのではありません。  
+その仕組みを正式運用にしてよいか分からないうちに、リスク分類を最初の問いにしてしまうことが問題です。
 
-- A normal governance dashboard can look green.
-- The work can be completed, approved, and logged.
-- The company may still be unable to say who accepted responsibility, what was checked, or what should have stopped the handoff.
-- ADIC acts as an upstream gate before risk management meaningfully begins.
+## このデモで分かること
 
-## Management Output
+- 管理画面が全部緑でも、まだ本番運用に入れてよいとは限りません。
+- 承認され、ログ設計があっても、会社の正式な仕組みとして責任を負えるとは限りません。
+- 誰が何を引き受けるか、何を見て通すか、どんな時に止まるかが大事です。
+- ADICは、リスク管理の後に足す管理ではなく、本番運用の前に置くゲートです。
 
-The app turns the scenario into a plain management card:
+## 経営向けの出力
 
-- Operational status
-- Governance status
-- Accountability status
-- Management action
+アプリは最後に、経営向けのカードを出します。
 
-This is the point of the demo: ADIC is not a paperwork checklist. It is a pass-or-stop gate for deciding whether an AI-assisted decision can become a company action.
+- 業務フロー案
+- リスク分類
+- ログ設計
+- 正式運用してよいか
+- 経営としての対応
 
-## What This Is Not
+ADICは書類を増やすチェックリストではありません。  
+その仕組みを、会社の標準業務として動かしてよいかを見ます。
 
-- Not a Lean demo.
-- Not a math demo.
-- Not a risk scoring app.
-- Not an academic UI.
+## これは何ではないか
 
-The Lean background is only conceptual: if the evidence and responsibility layer is forgotten, different responsibility stories can look like the same business result.
+- Leanのデモではありません。
+- 数学の説明ではありません。
+- リスク点数を出すアプリではありません。
+- 学術向けの画面ではありません。
 
-## Run Locally
+Leanは背景にある考え方の参考です。  
+証拠や責任の流れを忘れると、違う仕組みが同じ「配送完了」に見えてしまう、という点だけを使っています。
+
+## ローカルで実行
 
 ```bash
 pip install -r requirements.txt
@@ -68,26 +76,26 @@ streamlit run app.py
 
 ## Streamlit Community Cloud
 
-Use these settings when deploying:
+デプロイ時の設定:
 
 - Repository: `GhostDriftTheory/responsibility-os-internal-control-demo`
 - Branch: `main`
 - Main file path: `app.py`
 - Python dependencies: `requirements.txt`
 
-After deployment, add the public Streamlit URL near the top of this README.
+デプロイ後、このREADMEの上の方に公開URLを追加してください。
 
-## App Flow
+## アプリの流れ
 
-1. Priority shift: risk-first governance vs responsibility-first control.
-2. Scenario: cold-chain logistics handoff.
-3. Current governance view: risk class, approval, logs, and completion all appear green.
-4. Control gap: the company still cannot own the decision.
-5. Collapse demo: accountable and non-accountable handoffs both appear as `Delivery completed`.
-6. Company action gate: check whether the decision can pass, must stop, or needs evidence.
-7. Management output: clear business action for leaders.
+1. 見る順番を変える: リスクから始める順番と、正式運用にできるかから始める順番を比べる。
+2. シナリオ: 冷蔵品の受け渡し業務に、新しい自動化フローを入れる。
+3. 今の管理画面: リスク分類、承認、ログ設計、運用開始準備はすべて緑に見える。
+4. 足りない点: それでも正式運用にしてよい仕組みとは限らない。
+5. 同じ結果に見える例: 正式運用にできる仕組みも、できない仕組みも、画面上は「配送完了」に見える。
+6. 正式運用ゲート: 本番へ進む、止める、証拠の残し方を足す。
+7. 経営向けの出力: 次に何をすべきかを短く出す。
 
-## File Structure
+## ファイル構成
 
 ```text
 .
