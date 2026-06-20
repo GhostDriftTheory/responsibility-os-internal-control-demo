@@ -8,7 +8,7 @@ st.set_page_config(
     page_title="ADIC 内部統制デモ",
     page_icon="R",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 
@@ -80,7 +80,8 @@ st.markdown(
         margin-top: -0.35rem;
         margin-bottom: 0.8rem;
     }
-    .box, .path-box, .status-card, .inspection-panel, .node, .decision-card {
+    .box, .path-box, .status-card, .inspection-panel, .node, .decision-card,
+    .judgement-plate, .mechanism-card, .flow-card, .contrast-card, .conclusion-card {
         border-radius: 8px;
     }
     .box {
@@ -108,6 +109,29 @@ st.markdown(
         border-color: var(--red-border);
         background: var(--red-bg);
         color: var(--red-text);
+    }
+    .judgement-plate {
+        border: 1px solid var(--red-border);
+        background: var(--red-bg);
+        padding: 1rem 1.15rem;
+        margin: 0.9rem 0 1.25rem;
+        color: var(--red-text);
+    }
+    .judgement-grid {
+        display: grid;
+        grid-template-columns: 1fr 0.7fr;
+        gap: 1rem;
+    }
+    .judgement-label {
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 800;
+        margin-bottom: 0.2rem;
+    }
+    .judgement-value {
+        color: var(--red-text);
+        font-size: 1.05rem;
+        font-weight: 900;
     }
     .path-box {
         border: 1px solid var(--line);
@@ -281,10 +305,76 @@ st.markdown(
     .decision-value-red {
         color: var(--red-text);
     }
+    .mechanism-card {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 1.1rem 1.2rem;
+        margin: 0.85rem 0;
+    }
+    .mechanism-card strong {
+        color: var(--ink);
+    }
+    .flow-card {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        border-top: 5px solid var(--blue);
+        padding: 1rem;
+        min-height: 160px;
+    }
+    .flow-number {
+        color: var(--blue);
+        font-size: 0.85rem;
+        font-weight: 900;
+        margin-bottom: 0.25rem;
+    }
+    .flow-title {
+        color: var(--ink);
+        font-size: 1.05rem;
+        font-weight: 850;
+        margin-bottom: 0.35rem;
+    }
+    .flow-copy {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+    .contrast-card {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 1.05rem 1.15rem;
+        min-height: 260px;
+    }
+    .contrast-left {
+        border-top: 5px solid var(--yellow-border);
+    }
+    .contrast-right {
+        border-top: 5px solid var(--blue);
+    }
+    .contrast-title {
+        color: var(--ink);
+        font-weight: 850;
+        margin-bottom: 0.55rem;
+    }
+    .conclusion-card {
+        border: 2px solid var(--blue);
+        background: var(--blue-bg);
+        color: var(--ink);
+        padding: 1.2rem 1.3rem;
+        margin-top: 1rem;
+        font-size: 1.05rem;
+        font-weight: 850;
+    }
     .footer-link {
         color: var(--blue);
         font-weight: 700;
         text-decoration: none;
+    }
+    @media (max-width: 760px) {
+        .judgement-grid {
+            grid-template-columns: 1fr;
+        }
+        .hero-title {
+            font-size: 1.75rem;
+        }
     }
     </style>
     """,
@@ -322,28 +412,24 @@ def status_card(label: str, value: str) -> None:
     )
 
 
-def dashboard_item(label: str) -> None:
+def judgement_plate() -> None:
     st.markdown(
-        f'<div class="dashboard-item"><span>{label}</span><span>OK</span></div>',
-        unsafe_allow_html=True,
-    )
-
-
-def inspection_node(title: str, copy: str, broken: bool = False) -> None:
-    klass = "node node-broken" if broken else "node"
-    st.markdown(
-        f"""
-        <div class="{klass}">
-            <div class="node-title">{title}</div>
-            <div class="node-copy">{copy}</div>
+        """
+        <div class="judgement-plate">
+            <div class="judgement-grid">
+                <div>
+                    <div class="judgement-label">今日見ること</div>
+                    <div class="judgement-value">配送会社 → 中継倉庫で、責任が空白になっていないか</div>
+                </div>
+                <div>
+                    <div class="judgement-label">判定</div>
+                    <div class="judgement-value">空白あり。正式運用不可。</div>
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
-
-
-def arrow() -> None:
-    st.markdown('<div class="arrow">↓</div>', unsafe_allow_html=True)
 
 
 def conventional_panel() -> None:
@@ -427,16 +513,30 @@ def management_card() -> None:
     )
 
 
-with st.sidebar:
-    st.markdown("### Responsibility OS")
-    st.markdown("このデモで見る問いは1つです。")
-    st.markdown("**その仕組み、本番運用に入れてよいですか？**")
-    st.markdown(f"[GitHub repository]({GITHUB_URL})")
-    st.divider()
-    st.markdown("**これは何か**")
-    st.markdown("業務フローを順にたどり、責任のつながりが切れる場所を見つける検査です。")
-    st.markdown("**これは何ではないか**")
-    st.markdown("- Leanの画面ではありません\n- 数学の説明ではありません\n- リスク点数を出すアプリではありません")
+def flow_card(number: int, title: str, copy: str) -> None:
+    st.markdown(
+        f"""
+        <div class="flow-card">
+            <div class="flow-number">STEP {number}</div>
+            <div class="flow-title">{title}</div>
+            <div class="flow-copy">{copy}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def contrast_card(title: str, items: list[str], klass: str) -> None:
+    body = "".join(f"<li>{item}</li>" for item in items)
+    st.markdown(
+        f"""
+        <div class="contrast-card {klass}">
+            <div class="contrast-title">{title}</div>
+            <ul>{body}</ul>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 st.markdown(
@@ -456,126 +556,187 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.header("見る順番を変える")
-left, right = st.columns(2)
-with left:
-    path_box(
-        "よくある順番",
-        [
-            "このシステムのリスクは何か",
-            "承認されたか",
-            "ログは取れるか",
-            "運用開始できるか",
-        ],
-        "本番運用できそうに見える。でも、責任のつながりはまだ見えていない。",
-        "path-risk",
-        "yellow-box",
+demo_tab, mechanism_tab = st.tabs(
+    ["デモ：責任が空白になる瞬間", "メカニズム：なぜ内部統制になるのか"]
+)
+
+with demo_tab:
+    judgement_plate()
+
+    st.header("見る順番を変える")
+    left, right = st.columns(2)
+    with left:
+        path_box(
+            "よくある順番",
+            [
+                "このシステムのリスクは何か",
+                "承認されたか",
+                "ログは取れるか",
+                "運用開始できるか",
+            ],
+            "本番運用できそうに見える。でも、責任のつながりはまだ見えていない。",
+            "path-risk",
+            "yellow-box",
+        )
+    with right:
+        path_box(
+            "ADIC / 責任OSの順番",
+            [
+                "業務フローを順にたどる",
+                "誰が何を渡すかを見る",
+                "何を確認して渡すかを見る",
+                "どこで止められるかを見る",
+                "責任が切れた場所で止める",
+            ],
+            "正式運用に耐える仕組みかを先に見る。",
+            "path-responsibility",
+            "green-box",
+        )
+
+    st.header("シナリオ")
+    html_block(
+        """
+        <strong>冷蔵品の受け渡し業務。</strong><br>
+        会社は、冷蔵品の受け渡しに新しい自動化フローを入れようとしています。
+        この仕組みでは、配送時間・コスト・在庫効率をよくするため、
+        倉庫Aでの受け渡しを標準フローに組み込みます。
+        """
     )
-with right:
-    path_box(
-        "ADIC / 責任OSの順番",
-        [
-            "業務フローを順にたどる",
-            "誰が何を渡すかを見る",
-            "何を確認して渡すかを見る",
-            "どこで止められるかを見る",
-            "責任が切れた場所で止める",
-        ],
-        "正式運用に耐える仕組みかを先に見る。",
-        "path-responsibility",
-        "green-box",
+
+    st.header("従来の管理画面は全部グリーン")
+    st.markdown(
+        '<div class="section-note">ここだけ見ると、本番運用できそうに見えます。</div>',
+        unsafe_allow_html=True,
+    )
+    card_cols = st.columns(5)
+    with card_cols[0]:
+        status_card("リスク分類", "中")
+    with card_cols[1]:
+        status_card("承認", "済み")
+    with card_cols[2]:
+        status_card("温度ログ", "あり")
+    with card_cols[3]:
+        status_card("監査ログ", "あり")
+    with card_cols[4]:
+        status_card("配送", "完了")
+
+    st.header("ADIC / 責任OSの検査結果")
+    st.markdown(
+        '<div class="section-note">説明ではなく、検査結果として見せます。切れる場所は1か所だけです。</div>',
+        unsafe_allow_html=True,
     )
 
-st.header("シナリオ")
-html_block(
-    """
-    <strong>冷蔵品の受け渡し業務。</strong><br>
-    会社は、冷蔵品の受け渡しに新しい自動化フローを入れようとしています。
-    この仕組みでは、配送時間・コスト・在庫効率をよくするため、
-    倉庫Aでの受け渡しを標準フローに組み込みます。
-    """
-)
+    left, right = st.columns([0.92, 1.08])
+    with left:
+        conventional_panel()
+    with right:
+        adic_inspection_panel()
 
-st.header("従来の管理画面は全部グリーン")
-st.markdown(
-    '<div class="section-note">ここだけ見ると、本番運用できそうに見えます。</div>',
-    unsafe_allow_html=True,
-)
-card_cols = st.columns(5)
-with card_cols[0]:
-    status_card("リスク分類", "中")
-with card_cols[1]:
-    status_card("承認", "済み")
-with card_cols[2]:
-    status_card("温度ログ", "あり")
-with card_cols[3]:
-    status_card("監査ログ", "あり")
-with card_cols[4]:
-    status_card("配送", "完了")
-
-st.header("ADIC / 責任OSの検査結果")
-st.markdown(
-    '<div class="section-note">説明ではなく、検査結果として見せます。切れる場所は1か所だけです。</div>',
-    unsafe_allow_html=True,
-)
-
-left, right = st.columns([0.92, 1.08])
-with left:
-    conventional_panel()
-
-with right:
-    adic_inspection_panel()
-
-st.markdown(
-    """
-    <div class="stop-card">
-        <div class="stop-title">STOP</div>
-        <div class="stop-copy">
-            責任のつながりが中継倉庫で切れているため、この仕組みは本番運用に入れてはいけません。
+    st.markdown(
+        """
+        <div class="stop-card">
+            <div class="stop-title">STOP</div>
+            <div class="stop-copy">
+                責任のつながりが中継倉庫で切れているため、この仕組みは本番運用に入れてはいけません。
+            </div>
         </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-html_block(
-    """
-    <strong>ADIC / 責任OSが見ていること:</strong><br>
-    ログがあるかではありません。受け渡しごとに、
-    誰が何を受け取り、何を確認し、どこで止められるかを順にたどります。
-    つながりが切れる場所があれば、管理画面が全部緑でも本番運用には入れません。
-    """,
-    "blue-box",
-)
-
-st.header("経営向けの出力")
-management_card()
-
-st.header("ADICはリスク管理ではない")
-left, right = st.columns(2)
-with left:
-    html_block(
-        """
-        <strong>リスク管理が聞くこと:</strong><br>
-        この仕組みを運用したあと、何が悪くなり得るか。
         """,
-        "yellow-box",
+        unsafe_allow_html=True,
     )
-with right:
+
     html_block(
         """
-        <strong>ADICが聞くこと:</strong><br>
-        そもそも、この仕組みを会社の正式運用にしてよいか。
+        <strong>ADIC / 責任OSが見ていること:</strong><br>
+        ログがあるかではありません。受け渡しごとに、
+        誰が何を受け取り、何を確認し、どこで止められるかを順にたどります。
+        つながりが切れる場所があれば、管理画面が全部緑でも本番運用には入れません。
         """,
         "blue-box",
     )
 
-html_block(
-    """
-    小さな補足: これは形式検証の考え方を、業務向けに見せたものです。
-    難しい数式ではなく、業務フローを順にたどり、切れ目を見つける検査として使います。
-    """
-)
+    st.header("経営向けの出力")
+    management_card()
+
+with mechanism_tab:
+    st.header("責任分界は“点”ではなく“つながり”で検査する")
+    st.markdown(
+        """
+        <div class="mechanism-card">
+            通常の管理では、承認、ログ、配送完了などが個別にOKであれば安心に見えます。
+            しかし内部統制で本当に重要なのは、それぞれの記録が
+            <strong>責任の移転条件</strong>としてつながっているかです。
+            配送会社の責任が終わった瞬間に、倉庫の責任が始まっていなければ、
+            その間に責任の空白が生まれます。
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    flow_cols = st.columns(4)
+    with flow_cols[0]:
+        flow_card(1, "渡す", "誰が、何を、どの条件で渡すか。")
+    with flow_cols[1]:
+        flow_card(2, "受け取る", "次の相手が、何を確認して責任を受け取るか。")
+    with flow_cols[2]:
+        flow_card(3, "止める", "条件を満たさないとき、誰が止めるか。")
+    with flow_cols[3]:
+        flow_card(4, "残す", "後から同じ判断を確認できる形で記録する。")
+
+    html_block(
+        """
+        <strong>なぜ形式検証の考え方と相性がよいのか。</strong><br>
+        責任分界を、単なるチェック項目ではなく「前の責任が終わり、次の責任が始まる流れ」
+        として扱えるからです。Aの責任が終わる条件、Bの責任が始まる条件、
+        止める条件、後から確認できる記録。この4つが地続きかを検査できます。
+        """,
+        "blue-box",
+    )
+
+    st.header("だから、次世代内部統制になる")
+    st.markdown(
+        """
+        <div class="mechanism-card">
+            ADIC / 責任OSが見ているのは、単にログがあるかどうかではありません。
+            業務フローの中で、責任が空白にならず、次の担当者や会社へ移っているかを検査します。
+            これにより、管理画面が全部グリーンでも、本番運用してはいけない仕組みを止められます。
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    left, right = st.columns(2)
+    with left:
+        contrast_card(
+            "従来の内部統制",
+            [
+                "承認されたか",
+                "ログがあるか",
+                "ルールに沿っているか",
+                "事故後に説明できるか",
+            ],
+            "contrast-left",
+        )
+    with right:
+        contrast_card(
+            "ADIC / 責任OS",
+            [
+                "責任が次に渡ったか",
+                "条件未達なら止まるか",
+                "空白が残っていないか",
+                "後から同じ判断を検査できるか",
+            ],
+            "contrast-right",
+        )
+
+    st.markdown(
+        """
+        <div class="conclusion-card">
+            次世代内部統制とは、事故後に説明資料を集めることではありません。<br>
+            本番運用に入る前に、責任が空白になる場所を見つけ、そこで止められる仕組みです。
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.markdown(
     f'<a class="footer-link" href="{GITHUB_URL}" target="_blank">View project on GitHub</a>',
