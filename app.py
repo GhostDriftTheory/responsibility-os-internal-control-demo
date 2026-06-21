@@ -5,7 +5,7 @@ GITHUB_URL = "https://github.com/GhostDriftTheory/responsibility-os-internal-con
 
 
 st.set_page_config(
-    page_title="ADIC 正式運用判定デモ",
+    page_title="ADIC 内部統制デモ",
     page_icon="R",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -435,7 +435,7 @@ def judgement_plate() -> None:
             <div class="judgement-grid">
                 <div>
                     <div class="judgement-label">今日見ること</div>
-                    <div class="judgement-value">この仕組みを本番運用に入れてよいか</div>
+                    <div class="judgement-value">この仕組みを会社の正式運用に入れてよいか</div>
                 </div>
                 <div>
                     <div class="judgement-label">判定</div>
@@ -516,7 +516,7 @@ def management_card() -> None:
                 <div class="decision-value">あり</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">本番運用に入れてよいか</div>
+                <div class="decision-label">正式運用してよいか</div>
                 <div class="decision-value decision-value-red">不可</div>
             </div>
             <div class="decision-row">
@@ -570,14 +570,14 @@ def contrast_card(title: str, items: list[str], klass: str) -> None:
 st.markdown(
     """
     <div class="hero">
-        <div class="eyebrow">ADIC / AI Assurance</div>
+        <div class="eyebrow">Responsibility OS / ADIC</div>
         <div class="hero-title">その仕組み、本番運用に入れてよいですか？</div>
         <div class="hero-subtitle">
-            AIシステム、自動化ツール、外部API、委託先連携。
-            完成後の監査ではなく、本番運用に入れる前に確認するデモです。
+            新しい業務フロー、AIシステム、自動化、外部委託の仕組み。
+            経営が最後に気にする問題は同じです。
         </div>
         <div class="spine">
-            ログや承認がそろっていても、後から同じ判断を再確認できない仕組みは、本番運用に入れられません。
+            承認やログがそろっていても、責任があいまいになりやすい"異常時に"誰が責任を負うのかわからなくなる仕組みやシステムは、AI時代の本番運用に採用できません。
         </div>
     </div>
     """,
@@ -705,7 +705,7 @@ with mechanism_tab:
         <div class="mechanism-card">
             経営が知りたいのは、承認されたか、ログがあるか、
             チェックリストが埋まっているかだけではありません。
-            本当に知りたいのは、この仕組みを本番運用に入れてよいかです。
+            本当に知りたいのは、この仕組みを会社の正式運用に入れてよいかです。
             そのためには、異常時に誰が止めるのか、誰が判断を引き受けるのか、
             後から同じ判断を確認できるのかを、業務の流れに沿って確かめる必要があります。
             ADIC / 責任OSは、この確認を形式検証の考え方で行います。
@@ -718,7 +718,7 @@ with mechanism_tab:
         """
         以下では、冷蔵品の受け渡しを例にします。
         ただし見ているのは物流の細部ではありません。
-        会社が新しい仕組みを本番運用に入れる前に、どこを検査すべきかです。
+        会社が新しい仕組みを正式運用に入れる前に、どこを検査すべきかです。
         """,
         "blue-box",
     )
@@ -750,7 +750,7 @@ with mechanism_tab:
         "blue-box",
     )
 
-    st.header("だから、完成後の監査だけでは足りない")
+    st.header("だから、次世代内部統制になる")
     st.markdown(
         """
         <div class="mechanism-card">
@@ -783,7 +783,6 @@ with mechanism_tab:
                 "前の責任が終わる条件は明確か",
                 "次の責任が始まる条件は明確か",
                 "条件未達なら止まるか",
-                
                 "後から同じ判定を再確認できるか",
             ],
             "contrast-right",
@@ -792,12 +791,10 @@ with mechanism_tab:
     st.markdown(
         """
         <div class="conclusion-card">
-            ADIC / 責任OSは、完成後にログを確認するためだけの技術ではありません。<br>
-            その仕組みを本番運用に入れてよいかを、
-            本番前に確認するための技術です。<br>
-            後から確認すべき情報が途中で消えないか、
-            例外や変更が起きたときにどこへ戻って確認できるか、
-            同じ判断を再確認できるかを見ます。
+            次世代内部統制とは、事故後に説明資料を集めることではありません。<br>
+            本番運用に入る前に、仕事の流れ、止める責任、後から確かめられる記録がつながっているかを検査し、
+            責任分界が切れる場所で止める仕組みです。<br>
+            だから ADIC / 責任OS は、「その仕組み、本番運用に入れてよいですか？」という経営判断に接続します。
         </div>
         """,
         unsafe_allow_html=True,
