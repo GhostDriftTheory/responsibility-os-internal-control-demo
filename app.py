@@ -435,7 +435,7 @@ def judgement_plate() -> None:
             <div class="judgement-grid">
                 <div>
                     <div class="judgement-label">今日見ること</div>
-                    <div class="judgement-value">この仕組みを会社の正式運用に入れてよいか</div>
+                    <div class="judgement-value">この仕組みを本番運用に入れてよいか</div>
                 </div>
                 <div>
                     <div class="judgement-label">判定</div>
@@ -516,7 +516,7 @@ def management_card() -> None:
                 <div class="decision-value">あり</div>
             </div>
             <div class="decision-row">
-                <div class="decision-label">正式運用してよいか</div>
+                <div class="decision-label">本番運用に入れてよいか</div>
                 <div class="decision-value decision-value-red">不可</div>
             </div>
             <div class="decision-row">
@@ -577,7 +577,7 @@ st.markdown(
             経営が最後に気にする問題は同じです。
         </div>
         <div class="spine">
-            承認やログがそろっていても、責任があいまいになりやすい"異常時に"誰が責任を負うのかわからなくなる仕組みやシステムは、AI時代の本番運用に採用できません。
+            承認やログがそろっていても、異常時に誰が止めるのかが消える仕組みは、本番運用に入れられません。
         </div>
     </div>
     """,
@@ -705,7 +705,7 @@ with mechanism_tab:
         <div class="mechanism-card">
             経営が知りたいのは、承認されたか、ログがあるか、
             チェックリストが埋まっているかだけではありません。
-            本当に知りたいのは、この仕組みを会社の正式運用に入れてよいかです。
+            本当に知りたいのは、この仕組みを本番運用に入れてよいかです。
             そのためには、異常時に誰が止めるのか、誰が判断を引き受けるのか、
             後から同じ判断を確認できるのかを、業務の流れに沿って確かめる必要があります。
             ADIC / 責任OSは、この確認を形式検証の考え方で行います。
@@ -718,7 +718,7 @@ with mechanism_tab:
         """
         以下では、冷蔵品の受け渡しを例にします。
         ただし見ているのは物流の細部ではありません。
-        会社が新しい仕組みを正式運用に入れる前に、どこを検査すべきかです。
+        会社が新しい仕組みを本番運用に入れる前に、どこを検査すべきかです。
         """,
         "blue-box",
     )
@@ -750,7 +750,7 @@ with mechanism_tab:
         "blue-box",
     )
 
-    st.header("だから、次世代内部統制になる")
+    st.header("だから、形式検証が経営判断につながる")
     st.markdown(
         """
         <div class="mechanism-card">
@@ -791,7 +791,7 @@ with mechanism_tab:
     st.markdown(
         """
         <div class="conclusion-card">
-            次世代内部統制とは、事故後に説明資料を集めることではありません。<br>
+            ADIC / 責任OSは、事故後に説明資料を集めるためのものではありません。<br>
             本番運用に入る前に、仕事の流れ、止める責任、後から確かめられる記録がつながっているかを検査し、
             責任分界が切れる場所で止める仕組みです。<br>
             だから ADIC / 責任OS は、「その仕組み、本番運用に入れてよいですか？」という経営判断に接続します。
