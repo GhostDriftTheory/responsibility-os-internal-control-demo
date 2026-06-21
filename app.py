@@ -697,7 +697,7 @@ with demo_tab:
 with mechanism_tab:
     st.header("形式検証で見るのは、細部のリスクではない")
     st.markdown(
-        '<div class="section-note">責任分界を「点」ではなく、仕組み全体のつながりとして検査する</div>',
+        '<div class="section-note">責任分界（機械判定しにくい責任の境界）を「点」ではなく、仕組み全体のつながりとして検査する</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
