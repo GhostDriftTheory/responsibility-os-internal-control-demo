@@ -829,3 +829,4 @@ st.markdown(
     f'<a class="footer-link" href="{GITHUB_URL}" target="_blank">View project on GitHub</a>',
     unsafe_allow_html=True,
 )
+
